@@ -18,3 +18,17 @@ export FLASK_DEBUG=1
 flask run
 ```
 
+In particular, the following should be enough for the entire process (for Mac/Linux):
+```bash
+# setup
+pip install flask flask-sqlalchemy flask-login db-sqlite3
+git clone https://github.com/ruhanhabib39/cse470-project.git 
+echo 'f3cfe9ed8fae309f02079dbf` >> secret.txt
+
+# run
+
+export FLASK_APP=cse470-project
+export FLASK_DEBUG=1
+flask run
+```
+
