@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for task in task_list %}
+
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                {{ task.title }}
+            </p>
+            <button class="card-header-icon" aria-label="more options">
+                <span class="icon">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+            </button>
+        </header>
+        <div class="card-content">
+            <div class="content">
+                {{ task.desc }}
+                {% for tag in task.tags %}
+                    <a href="#">#{{ tag.name }}</a>
+                {% endfor %}
+                <br>
+                {% for category in task.categories %}
+                    <a href="#">@{{ category.name }}</a>
+                {% endfor %}
+                <br>
+
+                Due by <time datetime="{{task.due_date}}">{{ task.due_date }}</time>
+            </div>
+        </div>
+        <footer class="card-footer">
+            <a href="#" class="card-footer-item">Save</a>
+            <a href="#" class="card-footer-item">Edit</a>
+            <a href="#" class="card-footer-item">Delete</a>
+        </footer>
+    </div> 
+
+{% endfor %}
+
+<br>
+
+<div class="box">
+    <form method="POST" action="/add_task">
+        <div class="field">
+            <div class="control">
+                <input class="input is-large" type="text" name="title" placeholder="title" autofocus="">
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <textarea class="textarea is-large" type="text" name="desc" placeholder="Description"></textarea>
+            </div>
+        </div>
+
+        <button class="button is-block is-info is-large is-fullwidth">Add Task</button>
+    </form>
+</div>
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="notification is-danger">
+        {{ messages[0] }}
+    </div>
+{% endif %}
+{% endwith %}
+
+{% endblock %}
+
