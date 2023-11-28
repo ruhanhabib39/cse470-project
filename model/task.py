@@ -37,12 +37,12 @@ CATEGORY_MAX_LENGTH = 100
 
 class Category(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(db.String(CATEGORY_MAX_LENGTH))
+    name: Mapped[str] = mapped_column(db.String(CATEGORY_MAX_LENGTH), unique=True)
 
 TAG_MAX_LENGTH = 30
 
 class Tag(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(db.String(TAG_MAX_LENGTH))
+    name: Mapped[str] = mapped_column(db.String(TAG_MAX_LENGTH), unique=True)
 
 

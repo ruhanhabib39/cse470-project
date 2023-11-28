@@ -6,6 +6,8 @@ from project import db
 
 from email_validator import validate_email, EmailNotValidError
 
+from controller.task import TaskController, TagController, CategoryController
+
 
 taskwork = Blueprint('taskwork', __name__)
 

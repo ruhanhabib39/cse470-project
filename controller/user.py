@@ -14,8 +14,8 @@ class UserController:
     # otherwise, returns first row from queryj
     # for example, UserController.get_first_user(email='test@test.com') should
     # give us the user with email = 'test@test.com'
-    @classmethod
-    def get_first_user(cls, **kwargs) -> Optional[User]:
+    @staticmethod
+    def get_first_user(**kwargs) -> Optional[User]:
         user = db.session.execute(db.select(User).filter_by(**kwargs)).first()
         if user:
             user = user[0]
@@ -24,8 +24,8 @@ class UserController:
     # this method validates and normalizes the given email
     # if the email is not valid, it flashes the mistake and returns None
     # otherwise, returns the normalized email
-    @classmethod
-    def validate_and_normalize_email(cls, email: str) -> (Optional[str], Optional[str]):
+    @staticmethod
+    def validate_and_normalize_email(email: str) -> (Optional[str], Optional[str]):
         try:
             email = validate_email(email, check_deliverability=False).normalized
         except EmailNotValidError as e:
@@ -33,14 +33,14 @@ class UserController:
         return (email, None)
 
     # try to login the user
-    @classmethod
-    def login_user(cls, email: str, password: str, remember: bool) -> Response:
-        email, error_message = cls.validate_and_normalize_email(email)
+    @staticmethod
+    def login_user(email: str, password: str, remember: bool) -> Response:
+        email, error_message = UserController.validate_and_normalize_email(email)
         if error_message:
             flash(error_message)
             return redirect(url_for('auth.login'))
 
-        user = cls.get_first_user(email=email)
+        user = UserController.get_first_user(email=email)
 
         if not user or not check_password_hash(user.password, password):
             flash('Wrong email or password')
@@ -54,10 +54,10 @@ class UserController:
     # validate signup data
     # returns a string describing the error if the data is invalid
     # otherwise, returns None
-    @classmethod
-    def validate_signup(cls, email: str, name: str, password: str, confirmed_password: str) -> Optional[str]:
+    @staticmethod
+    def validate_signup(email: str, name: str, password: str, confirmed_password: str) -> Optional[str]:
 
-        email, error_message = cls.validate_and_normalize_email(email)
+        email, error_message = UserController.validate_and_normalize_email(email)
         if error_message: return error_message
 
         # validate name and password
@@ -72,16 +72,16 @@ class UserController:
         elif password != confirmed_password:
             return 'Password and confirmation password did not match'
 
-        if cls.get_first_user(email=email):
+        if UserController.get_first_user(email=email):
             flash('Email address already in use')
             return redirect(url_for('auth.signup'))
 
         return None
 
     # signup the user
-    @classmethod
-    def signup_user(cls, email: str, name: str, password: str, confirmed_password: str) -> Response:
-        error_description = cls.validate_signup(email, name, password, confirmed_password)
+    @staticmethod
+    def signup_user(email: str, name: str, password: str, confirmed_password: str) -> Response:
+        error_description = UserController.validate_signup(email, name, password, confirmed_password)
         if error_description:
             flash(error_description)
             return redirect(url_for('auth.signup'))
