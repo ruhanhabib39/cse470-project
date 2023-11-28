@@ -32,7 +32,10 @@ def login_post():
         return redirect(url_for('auth.login'))
 
     # retrieve user from database by their email
-    user = User.query.filter_by(email=email).first()
+    # user = User.query.filter_by(email=email).first()
+    user = db.session.execute(db.select(User).filter_by(email=email)).first()
+    if user:
+        user = user[0]
 
     # check if user actually exists and whether their password is correct
     if not user or not check_password_hash(user.password, password):
@@ -87,7 +90,10 @@ def signup_post():
     # we see if a user with email already exists
     # user will None if user doesn't exist
     # otherwise, we already have a user with this email
-    user = User.query.filter_by(email=email).first()
+    # user = User.query.filter_by(email=email).first()
+    user = db.session.execute(db.select(User).filter_by(email=email)).first()
+    if user:
+        user = user[0]
 
     if user:
         # if user with given email already exists redirect back to the signup page and tell them
