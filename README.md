@@ -2,7 +2,7 @@
 
 Make sure that SQLite 3 is installed.
 
-Install the following Python libraries: `flask`, `flask-sqlalchemy`, `flask-login`, `db-sqlite3`.
+Install the following Python libraries: `flask`, `flask-sqlalchemy`, and `flask-login`.
 
 It can be done by typing in `pip install flask flask-sqlalchemy flask-login` into your terminal.
 
