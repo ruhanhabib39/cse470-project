@@ -29,13 +29,5 @@ def add_task():
         flash('Description too long')
         return redirect(url_for('main.tasks'))
 
-    task = Task(title=title,
-                desc=desc,
-                priority=priority,
-                due_date=due_date,
-                user_id=current_user.id, user=current_user)
-    db.session.add(task)
-    db.session.commit()
-
-    return redirect(url_for('main.tasks'))
+    return TaskController.create_task(title, desc, priority, due_date, current_user.id, current_user)
 

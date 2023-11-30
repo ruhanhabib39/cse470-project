@@ -12,26 +12,23 @@
         {% endif %}
         {% endwith %}
 
+        {% from "_formhelpers.html" import render_field %}
         <form method="POST" action="/login">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
-                </div>
-            </div>
-            <div class="field">
+            <dl>
+                <dd> {{ render_field(form.email, class="input is-large", placeholder="Email") }} </dd> <br/>
+                <dd> {{ render_field(form.password, class="input is-large", placeholder="Password") }} </dd>  <br/>
+                <dd>
                 <label class="checkbox">
-                    <input type="checkbox" name="remember">
+                    {{ render_field(form.remember) }} 
                     Remember me
                 </label>
-            </div>
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
+                </dd>
+                <br/>
+            </dl>
+
+            <button type="submit" class="button is-block is-info is-large is-fullwidth">Sign Up</button>
         </form>
+
     </div>
 </div>
 {% endblock %}
