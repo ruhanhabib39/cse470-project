@@ -2,41 +2,32 @@
 
 Make sure that SQLite 3 is installed.
 
-Install the following Python libraries: `flask`, `flask-sqlalchemy`, and `flask-login`.
+The following should be enough to setup the project:
 
-It can be done by typing in `pip install flask flask-sqlalchemy flask-login` into your terminal.
-
-
-To run the server, go to terminal and type in the following after `cd`-ing to the project's
-parent directory (for Unix-based systems):
+For Unix (bash or zsh):
 ```bash
-export FLASK_APP=cse470-project
-export FLASK_DEBUG=1
-flask run
+git clone https://github.com/ruhanhabib39/cse470-project.git
+mv cse470-project project
+cd project
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
-In particular, the following should be enough for the entire process (for Mac/Linux):
-```bash
-# setup
-pip install flask flask-sqlalchemy flask-login
-git clone https://github.com/ruhanhabib39/cse470-project.git 
-
-# run
-
-export FLASK_APP=cse470-project
-export FLASK_DEBUG=1
-flask run
-```
-
-For Windows, install SQLite 3 and type out the following in cmd:
+For Windows (cmd):
 ```batch
-pip install flask flask-sqlalchemy flask-login
-git clone https://github.com/ruhanhabib39/cse470-project.git 
-
-set FLASK_APP=cse470-project
-set FLASK_DEBUG=1
-flask run
+git clone https://github.com/ruhanhabib39/cse470-project.git
+ren cse470-project project
+cd cse470-project
+python -m venv venv
+venv\Scripts\activate.bat
+pip install -r requirements.txt
 ```
 
-The commands above should work, but they have not been tested.
+The commands above clones the project, renames the project folder, creates and activates the virtual
+environment, and installs the required packages in the virtual directory.
 
+To run the project:
+   - cd into the project folder
+   - activate the virtual environment (by `source venv/bin/activate` or `venv/Scripts/activate.bat`)
+   - and run `python run.py`
