@@ -1,6 +1,10 @@
 # ignore pycache
 __pycache__/
 
+# ignore venv
+
+venv/
+
 # gitignore for vim copied from https://github.com/github/gitignore/blob/main/Global/Vim.gitignore 
 
 # Swap
