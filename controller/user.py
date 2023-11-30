@@ -8,6 +8,18 @@ from email_validator import validate_email, EmailNotValidError
 
 from typing import Optional
 
+from wtforms import Form, BooleanField, StringField, PasswordField, validators
+
+class SignupForm(Form):
+    email = StringField('Email Address', [validators.Length(min=1, max=EMAIL_MAX_LENGTH), validators.Email()])
+    name = StringField('Name', [validators.Length(min=1, max=NAME_MAX_LENGTH)])
+    password = PasswordField('Password', [
+        validators.DataRequired(), 
+        validators.EqualTo('confirmed_password', message='Passwords must match'),
+        validators.Length(min=6, max=PASSWORD_MAX_LENGTH)
+    ])
+    confirmed_password = PasswordField('Confirm Password')
+
 class UserController:
     # queries the database for the user, filtered by the keywords arguments
     # returns None if it doesn't exist
@@ -59,18 +71,6 @@ class UserController:
 
         email, error_message = UserController.validate_and_normalize_email(email)
         if error_message: return error_message
-
-        # validate name and password
-        if len(name) < 1:
-            return 'Name must have at least one character'
-        elif len(name) > NAME_MAX_LENGTH:
-            return f'Name can not have more than {NAME_MAX_LENGTH} characters'
-        elif len(password) < 6:
-            return 'Pasword must have at least 6 characters'
-        elif len(password) > PASSWORD_MAX_LENGTH:
-            return f'Password can not have more thatn {PASSWORD_MAX_LENGTH} characters'
-        elif password != confirmed_password:
-            return 'Password and confirmation password did not match'
 
         if UserController.get_first_user(email=email):
             flash('Email address already in use')
