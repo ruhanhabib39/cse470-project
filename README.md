@@ -18,7 +18,7 @@ For Windows (cmd):
 ```batch
 git clone https://github.com/ruhanhabib39/cse470-project.git
 ren cse470-project project
-cd cse470-project
+cd project
 python -m venv venv
 venv\Scripts\activate.bat
 pip install -r requirements.txt
