@@ -10,4 +10,4 @@ parent_dir = cwd.parent
 os.environ["FLASK_APP"] = project_name
 os.environ["FLASK_DEBUG"] = "1"
 
-subprocess.run(["flask", "run"], cwd=parent_dir)
+subprocess.run(["flask", "run", "-p", "8080"], cwd=parent_dir)
