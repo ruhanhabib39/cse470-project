@@ -26,12 +26,18 @@ class Task(db.Model):
     desc: Mapped[str] = mapped_column(db.String(TASK_DESC_MAX_LENGTH))
     priority: Mapped[int] = mapped_column(db.Integer)
     due_date: Mapped[db.DateTime] = mapped_column(db.DateTime)
+    completed: Mapped[bool] = mapped_column(db.Boolean, default=False)
 
     categories: Mapped[List["Category"]] = relationship(secondary=category_association_table)
     tags: Mapped[List["Tag"]] = relationship(secondary=tag_association_table)
 
+    attachments: Mapped[List["Attachment"]] = relationship(back_populates="task")
+
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     user: Mapped["User"] = relationship(back_populates="tasks")
+
+    parent_id: Mapped[int] = mapped_column(ForeignKey("task.id"), nullable=True)
+    children = relationship("Task")
 
 CATEGORY_MAX_LENGTH = 100
 
@@ -46,3 +52,11 @@ class Tag(db.Model):
     name: Mapped[str] = mapped_column(db.String(TAG_MAX_LENGTH), unique=True)
 
 
+ATTACHMENT_MAX_FILE_NAME_LENGTH = 100
+
+class Attachment(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(db.String(ATTACHMENT_MAX_FILE_NAME_LENGTH))
+    
+    task_id: Mapped[int] = mapped_column(ForeignKey("task.id"))
+    task: Mapped["Task"] = relationship(back_populates="attachments")

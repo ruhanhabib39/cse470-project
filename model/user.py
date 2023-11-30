@@ -14,4 +14,4 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(db.String(EMAIL_MAX_LENGTH), unique=True)
     password: Mapped[str] = mapped_column(db.String(PASSWORD_MAX_LENGTH))
     name: Mapped[str] = mapped_column(db.String(NAME_MAX_LENGTH))
-    tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
+    tasks: Mapped[List["Task"]] = relationship(back_populates="user")
