@@ -6,21 +6,23 @@ from project import db
 
 from email_validator import validate_email, EmailNotValidError
 
-from controller.user import UserController, SignupForm
+from controller.user import UserController, SignupForm, LoginForm
 
 
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login')
 def login():
-    return render_template('login.html')
+    form = LoginForm(request.form)
+    return render_template('login.html', form=form)
 
 @auth.route('/login', methods=['POST'])
 def login_post():
+    form = LoginForm(request.form)
     # get form data
-    email = request.form.get('email')
-    password = request.form.get('password')
-    remember = bool(request.form.get('remember'))
+    email = form.email.data
+    password = form.password.data
+    remember = form.remember.data
 
     return UserController.login_user(email, password, remember)
     

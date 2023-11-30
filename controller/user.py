@@ -10,8 +10,14 @@ from typing import Optional
 
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 
+class LoginForm(Form):
+    email = StringField('Email Address')
+    password = PasswordField('Password')
+    remember = BooleanField('Remember me')
+
 class SignupForm(Form):
-    email = StringField('Email Address', [validators.Length(min=1, max=EMAIL_MAX_LENGTH), validators.Email()])
+    email = StringField('Email Address',
+            [validators.Length(min=1, max=EMAIL_MAX_LENGTH), validators.Email()])
     name = StringField('Name', [validators.Length(min=1, max=NAME_MAX_LENGTH)])
     password = PasswordField('Password', [
         validators.DataRequired(), 
