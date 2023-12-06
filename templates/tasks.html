@@ -2,7 +2,70 @@
 
 {% block content %}
 
+<script>
+    const taskURL0 = {{ url_for('main.task',task_id=0)|tojson }};
+    const taskURL = taskURL0.substring(0, taskURL0.length - 2);
+
+    var taskIDs = {{ task_ids|tojson }};
+
+    console.log(taskURL);
+    console.log(taskIDs);
+
+    const refreshTask = (taskID) => {
+        const taskDiv = document.getElementById(`task${taskID}`);
+        fetch(`${taskURL}/${taskID}`)
+                .then(response => response.text)
+                .then(text => taskDiv.innerHTML = text);
+    };
+
+    const pushTask = (taskID) => {
+        let taskColumn = document.getElementById(`task_column`);
+
+        fetch(`${taskURL}/${taskID}`)
+                .then(response => response.text())
+                .then(text => {console.log(text); taskColumn.innerHTML += text; });
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        for (const taskID of taskIDs) {
+            pushTask(taskID);
+        }
+    });
+</script>
+
+<div class="box">
+    <form method="POST" action="/add_task">
+        <div class="field">
+            <div class="control">
+                <input class="input is-large" type="text" name="title" placeholder="title" autofocus="">
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <textarea class="textarea is-large" type="text" name="desc" placeholder="Description"></textarea>
+            </div>
+        </div>
+
+        <button class="button is-block is-info is-large is-fullwidth">Add Task</button>
+    </form>
+</div>
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="notification is-danger">
+        {{ messages[0] }}
+    </div>
+{% endif %}
+{% endwith %}
+<div class="column" id="task_column">
+</div>
+
+
+<!--
 {% for task in task_list %}
+
 
     <div class="card">
         <header class="card-header">
@@ -39,36 +102,14 @@
     </div> 
     <br>
 
+
+    
+
 {% endfor %}
 
 <br>
 
-<div class="box">
-    <form method="POST" action="/add_task">
-        <div class="field">
-            <div class="control">
-                <input class="input is-large" type="text" name="title" placeholder="title" autofocus="">
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="control">
-                <textarea class="textarea is-large" type="text" name="desc" placeholder="Description"></textarea>
-            </div>
-        </div>
-
-        <button class="button is-block is-info is-large is-fullwidth">Add Task</button>
-    </form>
-</div>
-
-
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <div class="notification is-danger">
-        {{ messages[0] }}
-    </div>
-{% endif %}
-{% endwith %}
+-->
 
 {% endblock %}
 

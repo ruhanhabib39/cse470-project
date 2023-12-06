@@ -16,6 +16,10 @@ from abc import ABC, abstractmethod
 
 import datetime
 
+from wtforms import Form, validators
+from wtforms.fields import BooleanField, StringField, TextAreaField
+from wtforms.fields import DateTimeLocalField, SelectField, FileField
+
 class TagAndCategoryController(ABC):
     @classmethod
     @abstractmethod
@@ -79,6 +83,23 @@ class CategoryController(TagAndCategoryController):
     def get_front_letter(cls) -> str:
         return '@'
 
+class TaskForm(Form):
+    title = StringField('Title',
+            [validators.Length(min=1, max=TASK_TITLE_MAX_LENGTH)])
+    due_date = DateTimeLocalField('Due Date')
+    priority = SelectField('Priority', 
+            choices=[('1','Very High'),
+                     ('2','High'),
+                     ('3','Medium'),
+                     ('4', 'Low'),
+                     ('5', 'Very Low')])
+    desc = TextAreaField('Description',
+            [validators.Length(min=1, max=TASK_DESC_MAX_LENGTH)])
+    tags = StringField('Tags')
+    categories = StringField('Categories')
+    subtasks = SelectField('Add Subtask', coerce=int)
+    files = FileField('Upload File') 
+
 class TaskController:
     @staticmethod
     def create_task(title: str, desc: str, priority: int, due_date: datetime.date,
@@ -92,3 +113,7 @@ class TaskController:
         db.session.commit()
 
         return redirect(url_for('main.tasks'))
+
+    @staticmethod
+    def get_tasks(**kwargs) -> typing.List[Task]:
+        return db.session.scalars(db.select(Task).filter_by(**kwargs)).all()

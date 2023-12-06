@@ -1,0 +1,153 @@
+<div class="box" id="task{{ task_id }}">
+    {% from "_formhelpers.html" import render_field %}
+    <form method="POST" action="/task/{{ task_id }}">
+        <dl>
+            <div class="control">
+                <div class="field is-horizontal">
+                    {% for field in [form.title, form.due_date, form.priority] %}
+                        <div class="field-label is-normal">
+                            <label class="label"></label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="field is-expanded">
+                                    <div class="field has-addons">
+                                        <div class="control">
+                                            <a class="button is-static">{{ field.label }}</a>
+                                        </div>
+                                        <div class="control is-expanded">
+                                            <dd> {{ render_field(field, class="input") }} </dd>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <br/>
+
+            <div class="control">
+                <div class="field">
+                    <div class="field-label">
+                        <label class="label"></label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <dd> {{ render_field(form.desc, class="textarea is-expanded") }} </dd> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br/>
+
+            <div class="field is-horizontal">
+                {% for field in [form.tags, form.categories] %}
+                    <div class="field-label">
+                        <label class="label"></label>
+                    </div>
+
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="field is-expanded">
+                                <div class="field has-addons">
+                                    <div class="control">
+                                        <a class="button is-static">{{ field.label }}</a>
+                                    </div>
+                                    <div class="control is-expanded">
+                                        <dd> {{ render_field(field, class="input") }} </dd>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label">
+                    <label class="label"></label>
+                </div>
+
+                <div class="field-body">
+                    <div class="field">
+                        <div class="field is-expanded">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <a class="button is-static">{{ form.subtasks.label }}</a>
+                                </div>
+                                <div class="control is-expanded">
+                                    <dd> {{ render_field(form.subtasks, class="input", placeholder="") }} </dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-label">
+                    <label class="label"></label>
+                </div>
+
+                <div class="field-body">
+                    <div class="field">
+                        <div class="file has-name">
+                            <label class="file-label">
+                                <dd> {{ render_field(form.files, class="file-input") }}</dd>
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                        {{ form.files.label }}
+                                    </span>
+                                </span>
+                                <span class="file-name"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </dl>
+    </form>
+
+
+    {% macro display_subtasks(subtask) %}
+        <dl>
+            <dd>
+                <label class="checkbox">
+                    <input type="checkbox" disabled>
+                    <a href="task{{ subtask.id }}"> {{ subtask.title }} </a>
+                </label>
+            </dd>
+            {% for v in subtask.children %}
+                {{ display_subtasks(v) }}
+            {% endfor %}
+        </dl>
+    {% endmacro %}
+    <br/>
+
+    {% if task.subtasks %}
+        <div class="control">
+            <div class="box">
+                {{ display_subtasks(task) }}
+            </div>
+        </div>
+    {% endif %}
+
+    <br/>
+
+    {% if task.attachments %}
+        <div class="control">
+            <div class="box">
+                Attachments: 
+                {% for attachment in task.attachments %}
+                    {{  attachment.name }}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
