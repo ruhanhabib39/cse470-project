@@ -34,3 +34,6 @@ db.sqlite
 
 secret.txt
 
+# ignoring attachment directory
+
+attachments/

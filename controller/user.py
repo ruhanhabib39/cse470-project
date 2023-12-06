@@ -10,12 +10,14 @@ from typing import Optional
 
 from wtforms import Form, BooleanField, StringField, EmailField, PasswordField, validators
 
-class LoginForm(Form):
+from flask_wtf import FlaskForm
+
+class LoginForm(FlaskForm):
     email = EmailField('Email Address')
     password = PasswordField('Password')
     remember = BooleanField('Remember me')
 
-class SignupForm(Form):
+class SignupForm(FlaskForm):
     email = EmailField('Email Address',
             [validators.Length(min=1, max=EMAIL_MAX_LENGTH), validators.Email()])
     name = StringField('Name', [validators.Length(min=1, max=NAME_MAX_LENGTH)])

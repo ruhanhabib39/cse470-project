@@ -2,39 +2,22 @@
 
 {% block content %}
 
+<script src="{{ url_for('static', filename='taskwork.js') }}">
+</script>
+
 <script>
-    const taskURL0 = {{ url_for('main.task',task_id=0)|tojson }};
-    const taskURL = taskURL0.substring(0, taskURL0.length - 2);
+    const taskURL0 = {{ url_for('main.task', task_id=0)|tojson }};
+    const taskIDs = {{ task_ids|tojson }};
 
-    var taskIDs = {{ task_ids|tojson }};
+    const taskWorker = getWorkers(taskURL0, taskIDs);
 
-    console.log(taskURL);
-    console.log(taskIDs);
-
-    const refreshTask = (taskID) => {
-        const taskDiv = document.getElementById(`task${taskID}`);
-        fetch(`${taskURL}/${taskID}`)
-                .then(response => response.text)
-                .then(text => taskDiv.innerHTML = text);
-    };
-
-    const pushTask = (taskID) => {
-        let taskColumn = document.getElementById(`task_column`);
-
-        fetch(`${taskURL}/${taskID}`)
-                .then(response => response.text())
-                .then(text => {console.log(text); taskColumn.innerHTML += text; });
-    };
-
-    document.addEventListener("DOMContentLoaded", () => {
-        for (const taskID of taskIDs) {
-            pushTask(taskID);
-        }
-    });
+    taskWorker.initTasks();
 </script>
 
 <div class="box">
     <form method="POST" action="/add_task">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="field">
             <div class="control">
                 <input class="input is-large" type="text" name="title" placeholder="title" autofocus="">

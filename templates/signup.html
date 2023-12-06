@@ -14,6 +14,7 @@
 
         {% from "_formhelpers.html" import render_field %}
         <form method="POST" action="/signup">
+            {{ form.csrf_token }}
             <dl>
                 <dd> {{ render_field(form.email, class="input is-large", placeholder="Email") }} </dd> <br/>
                 <dd> {{ render_field(form.name, class="input is-large", placeholder="Name") }} </dd> <br/>

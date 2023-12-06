@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf import CSRFProtect
 
 import sys
 import os
@@ -12,13 +13,20 @@ sys.path.append(current_dir)
 # setting up the database
 db = SQLAlchemy()
 
+csrf = CSRFProtect()
+
+ATTACHMENT_FOLDER = ''
 
 def create_app():
     app = Flask(__name__)
 
     app.config.from_pyfile('config.py') # reading config stuff from config.py
 
+    global ATTACHMENT_FOLDER
+    ATTACHMENT_FOLDER = app.config['ATTACHMENT_FOLDER']
+
     db.init_app(app)
+    csrf.init_app(app)
 
     # be careful about the order of import
     # the following can not be imported twice

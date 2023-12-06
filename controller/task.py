@@ -18,7 +18,10 @@ import datetime
 
 from wtforms import Form, validators
 from wtforms.fields import BooleanField, StringField, TextAreaField
-from wtforms.fields import DateTimeLocalField, SelectField, FileField
+from wtforms.fields import DateTimeLocalField, SelectField
+
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
 
 class TagAndCategoryController(ABC):
     @classmethod
@@ -65,6 +68,14 @@ class TagAndCategoryController(ABC):
     def get_plus_create_all(cls, desc: str):
         return list(set((cls.get_plus_create(word) for word in cls.parse(desc))))
 
+    @classmethod
+    @abstractmethod
+    def get_plus_create_from_semicolon_string(cls, desc: str):
+        old_style_desc = ' '.join([cls.get_front_letter() + token.strip() for token in desc.strip().split(';')])
+        return cls.get_plus_create_all(old_style_desc)
+
+
+
 class TagController(TagAndCategoryController):
     @classmethod
     def get_model(cls):
@@ -83,7 +94,7 @@ class CategoryController(TagAndCategoryController):
     def get_front_letter(cls) -> str:
         return '@'
 
-class TaskForm(Form):
+class TaskForm(FlaskForm):
     title = StringField('Title',
             [validators.Length(min=1, max=TASK_TITLE_MAX_LENGTH)])
     due_date = DateTimeLocalField('Due Date')
@@ -117,3 +128,7 @@ class TaskController:
     @staticmethod
     def get_tasks(**kwargs) -> typing.List[Task]:
         return db.session.scalars(db.select(Task).filter_by(**kwargs)).all()
+
+    @staticmethod
+    def get_first_task(**kwargs) -> Task | None:
+        return db.session.scalar(db.select(Task).filter_by(**kwargs))

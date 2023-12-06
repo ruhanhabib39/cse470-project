@@ -1,6 +1,21 @@
 <div class="box" id="task{{ task_id }}">
     {% from "_formhelpers.html" import render_field %}
-    <form method="POST" action="/task/{{ task_id }}">
+    <div class="buttons has-addons">
+        <button class="button is-link" onclick="taskWorker.updateTask({{ task_id }})">
+            Update
+        </button>
+        <button class="button is-success">
+        Mark complete
+        </button>
+        <button class="button is-warning">
+            Archive
+        </button>
+        <button class="button is-danger">
+            Delete
+        </button>
+    </div>
+    <form method="POST" id="form{{ task_id }}" action="/task/{{ task_id }}" enctype="multipart/form-data">
+        {{ form.csrf_token }}
         <dl>
             <div class="control">
                 <div class="field is-horizontal">
@@ -110,7 +125,6 @@
                     </div>
                 </div>
             </div>
-
         </dl>
     </form>
 
@@ -130,7 +144,7 @@
     {% endmacro %}
     <br/>
 
-    {% if task.subtasks %}
+    {% if task.children %}
         <div class="control">
             <div class="box">
                 {{ display_subtasks(task) }}
