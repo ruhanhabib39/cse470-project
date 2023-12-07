@@ -3,10 +3,12 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import login_user, login_required, logout_user, current_user
 from model.user import User, EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH, NAME_MAX_LENGTH
 from model.task import Task, TASK_TITLE_MAX_LENGTH, TASK_DESC_MAX_LENGTH
-from model.task import Category, Tag
-from project import db
+from model.task import Category, Tag, Attachment
+from project import db, ATTACHMENT_FOLDER
 
 from email_validator import validate_email, EmailNotValidError
+
+from werkzeug.utils import secure_filename
 
 import typing
 
@@ -22,6 +24,8 @@ from wtforms.fields import DateTimeLocalField, SelectField
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
+
+import os
 
 class TagAndCategoryController(ABC):
     @classmethod
@@ -71,7 +75,9 @@ class TagAndCategoryController(ABC):
     @classmethod
     @abstractmethod
     def get_plus_create_from_semicolon_string(cls, desc: str):
-        old_style_desc = ' '.join([cls.get_front_letter() + token.strip() for token in desc.strip().split(';')])
+        tokens = map(str.strip, desc.strip().split(';'))
+        nonempty_tokens = filter(lambda tok: len(tok) != 0, tokens)
+        old_style_desc = ' '.join([cls.get_front_letter() + token for token in nonempty_tokens])
         return cls.get_plus_create_all(old_style_desc)
 
 
@@ -132,3 +138,44 @@ class TaskController:
     @staticmethod
     def get_first_task(**kwargs) -> Task | None:
         return db.session.scalar(db.select(Task).filter_by(**kwargs))
+
+    @staticmethod
+    def update_task(form: TaskForm, tsk: Task):
+        task_id = tsk.id
+
+        tsk.title = form.title.data
+        tsk.due_date = form.due_date.data
+        tsk.priority = form.priority.data
+        tsk.desc = form.desc.data
+        tsk.tags = TagController.get_plus_create_from_semicolon_string(form.tags.data)
+        tsk.categories = CategoryController.get_plus_create_from_semicolon_string(form.categories.data)
+
+        db.session.commit()
+
+        if form.subtasks.data:
+            subtask = TaskController.get_first_task(id=form.subtasks.data)
+            tsk.children.append(subtask)
+
+            db.session.commit()
+
+        if form.files.data and form.files.data.filename:
+
+            filename = secure_filename(form.files.data.filename)
+            
+            print('filename =', filename)
+
+            attachment = Attachment(name=filename, task_id=task_id, task=tsk)
+
+            print('yay0')
+
+            if not os.path.exists(ATTACHMENT_FOLDER):
+                os.makedirs(ATTACHMENT_FOLDER)
+
+            print('yay1')
+
+            file = request.files['files']
+
+            file.save(os.path.join(ATTACHMENT_FOLDER, str(attachment.id)))
+
+            db.session.add(attachment)
+            db.session.commit()

@@ -27,6 +27,7 @@ class Task(db.Model):
     priority: Mapped[int] = mapped_column(db.Integer)
     due_date: Mapped[db.DateTime] = mapped_column(db.DateTime)
     completed: Mapped[bool] = mapped_column(db.Boolean, default=False)
+    archived: Mapped[bool] = mapped_column(db.Boolean, default=False)
 
     categories: Mapped[List["Category"]] = relationship(secondary=category_association_table)
     tags: Mapped[List["Tag"]] = relationship(secondary=tag_association_table)

@@ -1,7 +1,7 @@
 <div class="box" id="task{{ task_id }}">
     {% from "_formhelpers.html" import render_field %}
     <div class="buttons has-addons">
-        <button class="button is-link" onclick="taskWorker.updateTask({{ task_id }})">
+        <button class="button is-link update-button" onclick="taskWorker.updateTask({{ task_id }})">
             Update
         </button>
         <button class="button is-success">

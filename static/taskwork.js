@@ -25,7 +25,9 @@ const getWorkers = (taskURL0, taskIDs_) => {
 
         fetch(getTaskLink(taskID))
                 .then(response => response.text())
-                .then(text => taskColumn.innerHTML += text);
+                .then(text => {
+                    taskColumn.innerHTML += text; 
+                });
     };
 
     const initTasks = () => {
@@ -37,12 +39,13 @@ const getWorkers = (taskURL0, taskIDs_) => {
     };
 
     const updateTask = (taskID) => {
+        // console.log(`update task called for ${taskID}`);
         const taskDiv = getTaskDiv(taskID);
         const form = document.getElementById(`form${taskID}`);
         const data = new FormData(form);
         const taskLink = getTaskLink(taskID);
 
-        console.log(Array.from(data));
+        // console.log(Array.from(data));
 
         fetch(taskLink, { method: 'POST', body: data })
             .then(response => { refreshTask(taskID); });
