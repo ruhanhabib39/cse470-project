@@ -163,7 +163,7 @@
             <div class="box">
                 Attachments: 
                 {% for attachment in task.attachments %}
-                    {{  attachment.name }}
+                    <a href={{ url_for('main.attachments', attachment_id=attachment.id) }}> {{  attachment.name }} </a>
                 {% endfor %}
             </div>
         </div>

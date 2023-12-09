@@ -8,6 +8,16 @@ const getWorkers = (taskURL0, taskIDs_) => {
 
     const getTaskLink = (taskID) => `${taskURL}/${taskID}`;
 
+    const attachListeners = (taskDiv) => {
+        // listener for file input
+        let fileInput = taskDiv.querySelector('.file-input');
+        let fileName = taskDiv.querySelector('.file-name')
+        fileInput.addEventListener("change", () => {
+            const newName = fileInput.files[0] === undefined ? "" : fileInput.files[0].name;
+            fileName.innerHTML = newName;
+        });
+    };
+
     // given task id, returns a Promise for the response div
     const queryTask = async (taskID, priority) => {
 
@@ -21,8 +31,11 @@ const getWorkers = (taskURL0, taskIDs_) => {
         const responseHTML = parser.parseFromString(text, "text/html");
         const responseDiv = responseHTML.querySelector(`#task${taskID}`);
 
+        attachListeners(responseDiv);
+
         return responseDiv;
     };
+
 
     const refreshTask = (taskID, priority) => {
         queryTask(taskID, priority)
@@ -38,8 +51,11 @@ const getWorkers = (taskURL0, taskIDs_) => {
             let taskColumn = document.getElementById("task_column");
             let taskPromises = taskIDs.map((id, index) => queryTask(id));
             Promise.all(taskPromises)
-                .then(taskDivs =>
-                    taskDivs.forEach(taskDiv => taskColumn.appendChild(taskDiv)));
+                .then(taskDivs => {
+                    taskDivs.forEach(taskDiv => {
+                        taskColumn.appendChild(taskDiv)
+                    })
+                });
         });
     };
 

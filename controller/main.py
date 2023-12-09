@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort
-from flask import flash, jsonify
+from flask import flash, jsonify, send_file
 from flask_login import login_required, current_user
 from project import db, ATTACHMENT_FOLDER
 
@@ -60,3 +60,13 @@ def task(task_id):
 
     return render_template('task.html', task=tsk, task_id=task_id, form=form)
 
+
+@main.route('/attachments/<int:attachment_id>')
+@login_required
+def attachments(attachment_id):
+    attachment = db.session.scalar(db.select(Attachment).filter_by(id=attachment_id))
+    if not attachment or attachment.task.user_id != current_user.id:
+        abort(403)
+
+    file_dir = os.path.join(ATTACHMENT_FOLDER, str(attachment.id))
+    return send_file(file_dir, download_name=attachment.name)
