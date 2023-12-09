@@ -59,7 +59,7 @@ def task(task_id):
 @main.route('/')
 def index():
     tasks = []
-    if current_user:
+    if current_user.is_authenticated:
         tasks = current_user.tasks  # Fetch all tasks from the database
     return render_template('index.html', tasks=tasks)
 
@@ -87,7 +87,7 @@ def complete_delet_archive_task(task_id, operation):
     elif operation == 'archived':
         TaskController.archive(tsk, True)
     elif operation == 'unarchived':
-        TaskController.unarchive(tsk, False)
+        TaskController.archive(tsk, False)
     elif operation == 'delete':
         TaskController.delete(tsk)
 

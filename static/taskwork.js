@@ -100,8 +100,6 @@ const getWorkers = (taskURL0, taskIDs_, csrfToken) => {
         const form = document.getElementById(`form${taskID}`);
         const data = new FormData(form);
 
-        // console.log(Array.from(data));
-
         fetch(taskLink, { method: 'POST', body: data })
             .then(response => {
                 refreshTasks(taskID);
@@ -118,7 +116,6 @@ const getWorkers = (taskURL0, taskIDs_, csrfToken) => {
     const archiveTask = (taskID, value) => {
         const action = value === "1" ? "/archived" : "/unarchived";
         const taskLink = getTaskLink(taskID) + action;
-
 
         fetch(taskLink, { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
             .then(response => refreshTasks(taskID));
