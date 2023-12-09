@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from controller.task import TaskForm, TaskController, TagController, CategoryController
 
-from model.task import Attachment
+from model.task import Attachment, Task
 
 import os
 
@@ -59,6 +59,13 @@ def task(task_id):
         form.categories.data = '; '.join([x.name for x in tsk.categories])
 
     return render_template('task.html', task=tsk, task_id=task_id, form=form)
+
+@main.route('/')
+def index():
+    tasks = []
+    if current_user:
+        tasks = current_user.tasks  # Fetch all tasks from the database
+    return render_template('index.html', tasks=tasks)
 
 
 @main.route('/attachments/<int:attachment_id>')
