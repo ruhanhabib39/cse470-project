@@ -1,4 +1,4 @@
-const getWorkers = (taskURL0, taskIDs_) => {
+const getWorkers = (taskURL0, taskIDs_, csrfToken) => {
     const taskURL = taskURL0.substring(0, taskURL0.length - 2);
     const taskIDs = taskIDs_;
 
@@ -8,7 +8,17 @@ const getWorkers = (taskURL0, taskIDs_) => {
 
     const getTaskLink = (taskID) => `${taskURL}/${taskID}`;
 
-    const attachListeners = (taskDiv) => {
+    const attachListeners = (taskID, taskDiv) => {
+        // listener for update button
+        let updateButton = taskDiv.querySelector('.update-button');
+        updateButton.addEventListener("click", () => updateTask(taskID));
+
+        // listener for complete button
+        let completeButton = taskDiv.querySelector('.complete-button');
+        if (completeButton !== null && completeButton !== undefined) {
+            completeButton.addEventListener("click", () => completeTask(taskID));
+        }
+
         // listener for file input
         let fileInput = taskDiv.querySelector('.file-input');
         let fileName = taskDiv.querySelector('.file-name')
@@ -31,7 +41,7 @@ const getWorkers = (taskURL0, taskIDs_) => {
         const responseHTML = parser.parseFromString(text, "text/html");
         const responseDiv = responseHTML.querySelector(`#task${taskID}`);
 
-        attachListeners(responseDiv);
+        attachListeners(taskID, responseDiv);
 
         return responseDiv;
     };
@@ -44,6 +54,18 @@ const getWorkers = (taskURL0, taskIDs_) => {
                 taskDiv.parentNode.replaceChild(responseDiv, taskDiv);
             });
 
+    };
+
+    const refreshTasks = (preferredTaskID) => {
+        if (preferredTaskID !== undefined && preferredTaskID !== null) {
+            refreshTask(preferredTaskID, 'high');
+        }
+        for (const taskID of taskIDs) {
+            if (taskID === preferredTaskID) {
+                continue;
+            }
+            refreshTask(taskID, 'low');
+        }
     };
 
     const initTasks = () => {
@@ -70,14 +92,22 @@ const getWorkers = (taskURL0, taskIDs_) => {
 
         fetch(taskLink, { method: 'POST', body: data })
             .then(response => {
-                refreshTask(taskID, 'high');
-                taskIDs.filter(id => id !== taskID).forEach(id => refreshTask(id, 'low'));
+                refreshTasks(taskID);
             });
+    };
+
+    const completeTask = (taskID) => {
+        const taskDiv = getTaskDiv(taskID);
+        const taskLink = getTaskLink(taskID) + "/completed";
+        const form = taskDiv.querySelector('.update-form');
+        const data = new Formdata(form);
+
+        fetch(taskLink, { method: 'POST', body: data })
+            .then(response => refreshTasks(taskID));
     };
 
     const exported = {
         initTasks: initTasks, 
-        updateTask: updateTask,
     };
 
     return exported;

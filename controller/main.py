@@ -70,3 +70,16 @@ def attachments(attachment_id):
 
     file_dir = os.path.join(ATTACHMENT_FOLDER, str(attachment.id))
     return send_file(file_dir, download_name=attachment.name)
+
+
+@main.route('/task/<int:task_id>/completed', methods=['POST'])
+@login_required
+def complete_task(task_id):
+    tsk = TaskController.get_first_task(id=task_id)
+    if not tsk or tsk.user_id != current_user.id:
+        flash('Task not available')
+
+    TaskController.mark_complete(tsk)
+
+    resp = jsonify(success=True)
+    return resp

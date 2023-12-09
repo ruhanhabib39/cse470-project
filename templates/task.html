@@ -1,12 +1,21 @@
 <div class="box" id="task{{ task_id }}">
     {% from "_formhelpers.html" import render_field %}
     <div class="buttons has-addons">
-        <button class="button is-link update-button" onclick="taskWorker.updateTask({{ task_id }})">
+        <button class="button is-link update-button">
             Update
         </button>
-        <button class="button is-success">
-        Mark complete
-        </button>
+        {% if task.completed %}
+            <button class="button is-success" disabled>
+                Done!
+            </button>
+        {% else %}
+            <form method="POST" class="complete-form" action="/task/{{ task_id }}/completed">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button class="button is-success complete-button" type="submit">
+                    Mark complete
+                </button>
+            </form>
+        {% endif %}
         <button class="button is-warning">
             Archive
         </button>

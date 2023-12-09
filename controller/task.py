@@ -185,3 +185,10 @@ class TaskController:
 
             file.save(os.path.join(ATTACHMENT_FOLDER, str(attachment.id)))
 
+    @staticmethod
+    def mark_complete(task: Task):
+        task.completed = True
+        db.session.commit()
+
+        for children in task.children:
+            TaskController.mark_complete(children)
