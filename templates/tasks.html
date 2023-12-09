@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block content %}
 
 <script src="{{ url_for('static', filename='taskwork.js') }}"></script>
 <script src="{{ url_for('static', filename='searchwork.js') }}"></script>
@@ -169,10 +171,6 @@
       </button>
     </div>
   </div>
-{% endif %}
-{% endwith %}
-
-<div class="column" id="task_column">
 </div>
 
 <div class="box">
@@ -212,9 +210,11 @@
   </form>
 </div>
 
-{% with messages = get_flashed_messages() %} {% if messages %}
-<div class="notification is-danger">{{ messages[0] }}</div>
-{% endif %} {% endwith %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="notification is-danger">{{ messages[0] }}</div>
+    {% endif %}
+{% endwith %}
 <div class="column" id="task_column"></div>
 
 
