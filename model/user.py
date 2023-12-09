@@ -15,3 +15,7 @@ class User(UserMixin, db.Model):
     password: Mapped[str] = mapped_column(db.String(PASSWORD_MAX_LENGTH))
     name: Mapped[str] = mapped_column(db.String(NAME_MAX_LENGTH))
     tasks: Mapped[List["Task"]] = relationship(back_populates="user")
+
+# current_user.id
+# current_user.email
+# current_user.tasks
