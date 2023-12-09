@@ -70,7 +70,7 @@ class TagAndCategoryController(ABC):
     @classmethod
     @abstractmethod
     def get_plus_create_all(cls, desc: str):
-        return list(set((cls.get_plus_create(word) for word in cls.parse(desc))))
+        return set((cls.get_plus_create(word) for word in cls.parse(desc)))
 
     @classmethod
     @abstractmethod
@@ -139,6 +139,15 @@ class TaskController:
     def get_first_task(**kwargs) -> Task | None:
         return db.session.scalar(db.select(Task).filter_by(**kwargs))
 
+    # gets the root task of the tree containing the given task
+    @staticmethod
+    def get_root(task: Task) -> Task:
+        root = task
+        while root.parent_id:
+            root = TaskController.get_first_task(id=root.parent_id)
+        return root
+
+
     @staticmethod
     def update_task(form: TaskForm, tsk: Task):
         task_id = tsk.id
@@ -152,30 +161,27 @@ class TaskController:
 
         db.session.commit()
 
-        if form.subtasks.data:
-            subtask = TaskController.get_first_task(id=form.subtasks.data)
+        if (subtask := TaskController.get_first_task(id=form.subtasks.data)) and (not subtask.parent_id):
             tsk.children.append(subtask)
-
             db.session.commit()
 
         if form.files.data and form.files.data.filename:
 
             filename = secure_filename(form.files.data.filename)
             
-            print('filename =', filename)
-
             attachment = Attachment(name=filename, task_id=task_id, task=tsk)
-
-            print('yay0')
 
             if not os.path.exists(ATTACHMENT_FOLDER):
                 os.makedirs(ATTACHMENT_FOLDER)
 
-            print('yay1')
 
             file = request.files['files']
 
-            file.save(os.path.join(ATTACHMENT_FOLDER, str(attachment.id)))
 
             db.session.add(attachment)
             db.session.commit()
+
+            db.session.refresh(attachment)
+
+            file.save(os.path.join(ATTACHMENT_FOLDER, str(attachment.id)))
+

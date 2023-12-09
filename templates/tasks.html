@@ -8,8 +8,9 @@
 <script>
     const taskURL0 = {{ url_for('main.task', task_id=0)|tojson }};
     const taskIDs = {{ task_ids|tojson }};
+    const taskRoots = {{ task_roots|tojson }};
 
-    const taskWorker = getWorkers(taskURL0, taskIDs);
+    const taskWorker = getWorkers(taskURL0, taskIDs, taskRoots);
 
     taskWorker.initTasks();
 </script>

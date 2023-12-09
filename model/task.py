@@ -1,6 +1,6 @@
 from project import db
 
-from typing import List
+from typing import List, Set
 
 from sqlalchemy import Column, Table, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -29,8 +29,8 @@ class Task(db.Model):
     completed: Mapped[bool] = mapped_column(db.Boolean, default=False)
     archived: Mapped[bool] = mapped_column(db.Boolean, default=False)
 
-    categories: Mapped[List["Category"]] = relationship(secondary=category_association_table)
-    tags: Mapped[List["Tag"]] = relationship(secondary=tag_association_table)
+    categories: Mapped[Set["Category"]] = relationship(secondary=category_association_table)
+    tags: Mapped[Set["Tag"]] = relationship(secondary=tag_association_table)
 
     attachments: Mapped[List["Attachment"]] = relationship(back_populates="task")
 
