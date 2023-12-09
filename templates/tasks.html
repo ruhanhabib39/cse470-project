@@ -1,50 +1,216 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
-
-<script src="{{ url_for('static', filename='taskwork.js') }}">
-</script>
+<script src="{{ url_for('static', filename='taskwork.js') }}"></script>
+<script src="{{ url_for('static', filename='searchwork.js') }}"></script>
 
 <script>
-    const taskURL0 = {{ url_for('main.task', task_id=0)|tojson }};
-    const taskIDs = {{ task_ids|tojson }};
+  const taskURL0 = {{ url_for('main.task', task_id=0)|tojson }};
+  const taskIDs = {{ task_ids|tojson }};
 
-    const taskWorker = getWorkers(taskURL0, taskIDs);
+  const taskWorker = getWorkers(taskURL0, taskIDs);
 
-    taskWorker.initTasks();
+  taskWorker.initTasks();
 </script>
 
 <div class="box">
-    <form method="POST" action="/add_task">
-
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  <div class="control">
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label"></label>
+      </div>
+      <div class="field-body">
         <div class="field">
-            <div class="control">
-                <input class="input is-large" type="text" name="title" placeholder="title" autofocus="">
+          <div class="field is-expanded">
+            <div class="field has-addons">
+              <div class="control">
+                <a class="button is-static"><label for="title">Title</label></a>
+              </div>
+              <div class="control is-expanded">
+                <dd>
+                  <input
+                    class="input"
+                    id="search_title"
+                    maxlength="400"
+                    minlength="1"
+                    name="search_title"
+                    type="text"
+                    value=""
+                  />
+                </dd>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
 
+      <div class="field-label is-normal">
+        <label class="label"></label>
+      </div>
+      <div class="field-body">
         <div class="field">
-            <div class="control">
-                <textarea class="textarea is-large" type="text" name="desc" placeholder="Description"></textarea>
+          <div class="field is-expanded">
+            <div class="field has-addons">
+              <div class="control">
+                <a class="button is-static"
+                  ><label for="due_date">Due Date</label></a
+                >
+              </div>
+              <div class="control is-expanded">
+                <dd>
+                  <input
+                    class="input"
+                    id="search_due_date"
+                    name="search_due_date"
+                    type="datetime-local"
+                    value="2023-12-11 00:00:00"
+                  />
+                </dd>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
 
-        <button class="button is-block is-info is-large is-fullwidth">Add Task</button>
-    </form>
-</div>
-
-
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <div class="notification is-danger">
-        {{ messages[0] }}
+      <div class="field-label is-normal">
+        <label class="label"></label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="field is-expanded">
+            <div class="field has-addons">
+              <div class="control">
+                <a class="button is-static"
+                  ><label for="priority">Priority</label></a
+                >
+              </div>
+              <div class="control is-expanded">
+                <dd>
+                  <select
+                    class="input"
+                    id="search_priority"
+                    name="search_priority"
+                  >
+                    <option value="1">Very High</option>
+                    <option selected="" value="2">High</option>
+                    <option value="3">Medium</option>
+                    <option value="4">Low</option>
+                    <option value="5">Very Low</option>
+                  </select>
+                </dd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-{% endif %}
-{% endwith %}
-<div class="column" id="task_column">
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label"></label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="field is-expanded">
+            <div class="field has-addons">
+              <div class="control">
+                <a class="button is-static"><label for="tags">Tags</label></a>
+              </div>
+              <div class="control is-expanded">
+                <dd>
+                  <!-- Input for tags -->
+                  <input
+                    class="input"
+                    id="search_tags"
+                    name="search_tags"
+                    type="text"
+                    placeholder="Enter tags"
+                    value=""
+                  />
+                </dd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-label is-normal">
+        <label class="label"></label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="field is-expanded">
+            <div class="field has-addons">
+              <div class="control">
+                <a class="button is-static"
+                  ><label for="categories">Categories</label></a
+                >
+              </div>
+              <div class="control is-expanded">
+                <dd>
+                  <!-- Input for categories -->
+                  <input
+                    class="input"
+                    id="search_categories"
+                    name="search_categories"
+                    type="text"
+                    placeholder="Enter categories"
+                    value=""
+                  />
+                </dd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="buttons has-addons">
+      <button class="button is-link" id="search_button" onclick="filterTasks()">
+        Search
+      </button>
+    </div>
+  </div>
 </div>
 
+<div class="box">
+  <form method="POST" action="/add_task">
+    <input
+      type="hidden"
+      name="csrf_token"
+      value="{{ csrf_token() }}"
+      id="csrf_token"
+    />
+    <div class="field">
+      <div class="control">
+        <input
+          class="input is-large"
+          type="text"
+          name="title"
+          placeholder="title"
+          autofocus=""
+        />
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <textarea
+          class="textarea is-large"
+          type="text"
+          name="desc"
+          placeholder="Description"
+        ></textarea>
+      </div>
+    </div>
+
+    <button class="button is-block is-info is-large is-fullwidth">
+      Add Task
+    </button>
+  </form>
+</div>
+
+{% with messages = get_flashed_messages() %} {% if messages %}
+<div class="notification is-danger">{{ messages[0] }}</div>
+{% endif %} {% endwith %}
+<div class="column" id="task_column"></div>
 
 <!--
 {% for task in task_list %}
@@ -94,5 +260,84 @@
 
 -->
 
-{% endblock %}
+<script>
+  function filterTasks() {
+    const taskContainers = document.querySelectorAll(".allbox");
+    const convertToNull = (value) =>
+      value && value.trim().length === 0 ? null : value;
 
+    const search_title = convertToNull(
+      document.getElementById("search_title")?.value?.toLowerCase()
+    );
+    const search_due_date = convertToNull(
+      document.getElementById("search_due_date")?.value?.toLowerCase()
+    );
+    const search_priority = convertToNull(
+      document.getElementById("search_priority")?.value?.toLowerCase()
+    );
+    const search_tags = convertToNull(
+      document.getElementById("search_tags")?.value?.toLowerCase()
+    );
+    const search_categories = convertToNull(
+      document.getElementById("search_categories")?.value?.toLowerCase()
+    );
+
+    const isTitleValid = search_title.length > 0;
+    const isDueDateValid = search_due_date.length > 0;
+    const isPriorityValid = search_priority.length > 0;
+    const isTagsValid = search_tags.length > 0;
+    const isCategoriesValid = search_categories.length > 0;
+
+    taskContainers.forEach((container) => {
+      let shouldShow = false;
+
+      const inputs = container.querySelectorAll("input, textarea, select");
+      const values = {};
+
+      inputs.forEach((input) => {
+        const name = input.getAttribute("name");
+        const value = input.value.toLowerCase().trim();
+
+        if (name && value) {
+          values[name] = convertToNull(value);
+        }
+      });
+
+      const titleMatch =
+        isTitleValid &&
+        (values["title"] && values["title"].includes(search_title));
+      const dueDateMatch =
+        isDueDateValid &&
+        (values["due_date"] && values["due_date"] == search_due_date);
+      const priorityMatch =
+        isPriorityValid &&
+        (values["priority"] && values["priority"] == search_priority);
+      const tagsMatch =
+        isTagsValid &&
+        (values["tags"] && values["tags"].includes(search_tags));
+      const categoriesMatch =
+        isCategoriesValid &&
+        (values["categories"] &&
+          values["categories"].includes(search_categories));
+
+
+      if (
+        titleMatch ||
+        dueDateMatch ||
+        priorityMatch ||
+        tagsMatch ||
+        categoriesMatch
+      ) {
+        shouldShow = true;
+      }
+
+      if (shouldShow) {
+        container.style.display = "block";
+      } else {
+        container.style.display = "none";
+      }
+    });
+  }
+</script>
+
+{% endblock %}
