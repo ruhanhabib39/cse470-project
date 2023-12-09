@@ -31,3 +31,9 @@ def add_task():
 
     return TaskController.create_task(title, desc, priority, due_date, current_user.id, current_user)
 
+
+@taskwork.route('/restore_task/<int:task_id>', methods=['POST'])
+@login_required
+def restore_task(task_id):
+    return TaskController.restore_task(task_id)
+

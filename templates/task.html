@@ -1,16 +1,33 @@
 <div class="box allbox" id="task{{ task_id }}">
     {% from "_formhelpers.html" import render_field %}
     <div class="buttons has-addons">
-        <button class="button is-link" onclick="taskWorker.updateTask({{ task_id }})">
+        <button class="button is-link update-button">
             Update
         </button>
-        <button class="button is-success">
-        Mark complete
-        </button>
-        <button class="button is-warning">
-            Archive
-        </button>
-        <button class="button is-danger">
+        {% if task.completed %}
+            <button class="button is-success" disabled>
+                Done!
+            </button>
+        {% else %}
+            <button class="button is-success complete-button">
+                Mark complete
+            </button>
+        {% endif %}
+
+        {% if task.archived %}
+
+            <button class="button is-warning unarchive-button">
+                Unarchive
+            </button>
+
+        {% else %}
+
+            <button class="button is-warning archive-button">
+                Archive
+            </button>
+        {% endif %}
+
+        <button class="button is-danger delete-button">
             Delete
         </button>
     </div>
@@ -129,16 +146,20 @@
     </form>
 
 
-    {% macro display_subtasks(subtask) %}
+    {% macro display_subtasks(subtask,padding) %}
         <dl>
-            <dd>
+            <dd style="padding-left: {{padding}}px">
                 <label class="checkbox">
-                    <input type="checkbox" disabled>
-                    <a href="task{{ subtask.id }}"> {{ subtask.title }} </a>
+                    {% if subtask.completed %}
+                        <input type="checkbox" checked disabled>
+                    {% else %}
+                        <input type="checkbox" disabled>
+                    {% endif %}
+                    <a href="#task{{ subtask.id }}"> {{ subtask.title }} </a>
                 </label>
             </dd>
             {% for v in subtask.children %}
-                {{ display_subtasks(v) }}
+                {{ display_subtasks(v, padding + 20) }}
             {% endfor %}
         </dl>
     {% endmacro %}
@@ -147,7 +168,7 @@
     {% if task.children %}
         <div class="control">
             <div class="box">
-                {{ display_subtasks(task) }}
+                {{ display_subtasks(task, 0) }}
             </div>
         </div>
     {% endif %}
@@ -159,7 +180,7 @@
             <div class="box">
                 Attachments: 
                 {% for attachment in task.attachments %}
-                    {{  attachment.name }}
+                    <a href={{ url_for('main.attachments', attachment_id=attachment.id) }}> {{  attachment.name }} </a>
                 {% endfor %}
             </div>
         </div>

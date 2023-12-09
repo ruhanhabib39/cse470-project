@@ -1,6 +1,7 @@
 from project import db
+from datetime import datetime
 
-from typing import List
+from typing import List, Set
 
 from sqlalchemy import Column, Table, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -19,6 +20,15 @@ tag_association_table = Table("tag_association_table",
     Column("task_id", ForeignKey("task.id"), primary_key=True),
     Column("tag_id", ForeignKey("tag.id"), primary_key=True))
 
+# task.title
+# task.priority
+# task.due_date
+# task.completed
+# task.attachments
+
+# task.user
+
+# task.children
 
 class Task(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
@@ -27,9 +37,10 @@ class Task(db.Model):
     priority: Mapped[int] = mapped_column(db.Integer)
     due_date: Mapped[db.DateTime] = mapped_column(db.DateTime)
     completed: Mapped[bool] = mapped_column(db.Boolean, default=False)
+    archived: Mapped[bool] = mapped_column(db.Boolean, default=False)
 
-    categories: Mapped[List["Category"]] = relationship(secondary=category_association_table)
-    tags: Mapped[List["Tag"]] = relationship(secondary=tag_association_table)
+    categories: Mapped[Set["Category"]] = relationship(secondary=category_association_table)
+    tags: Mapped[Set["Tag"]] = relationship(secondary=tag_association_table)
 
     attachments: Mapped[List["Attachment"]] = relationship(back_populates="task")
 
@@ -38,6 +49,10 @@ class Task(db.Model):
 
     parent_id: Mapped[int] = mapped_column(ForeignKey("task.id"), nullable=True)
     children = relationship("Task")
+
+    # completed = db.Column(db.Boolean, default=False)  
+    completion_date = db.Column(db.DateTime)  
+    restored = db.Column(db.Boolean, default=False)
 
 CATEGORY_MAX_LENGTH = 100
 

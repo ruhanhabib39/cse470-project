@@ -7,4 +7,11 @@
 <h2 class="subtitle">
     Hello!
 </h2>
+
+{% for task in tasks %}
+    <div>
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.description }}</p>
+    </div>
+{% endfor %}
 {% endblock %}

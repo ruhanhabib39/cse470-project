@@ -4,4 +4,13 @@
 <h1 class="title">
     Welcome, {{ name }}!
 </h1>
+
+<form action="{{ url_for('user.update_profile') }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="{{ name }}">
+    <!-- TODO: more fields as necessary -->
+    <input type="submit" value="Update Profile">
+</form>
+
 {% endblock %}

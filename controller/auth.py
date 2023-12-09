@@ -9,6 +9,7 @@ from email_validator import validate_email, EmailNotValidError
 from controller.user import UserController, SignupForm, LoginForm
 
 
+
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login')

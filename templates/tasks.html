@@ -4,10 +4,11 @@
 <script src="{{ url_for('static', filename='searchwork.js') }}"></script>
 
 <script>
-  const taskURL0 = {{ url_for('main.task', task_id=0)|tojson }};
-  const taskIDs = {{ task_ids|tojson }};
+    const taskURL0 = {{ url_for('main.task', task_id=0)|tojson }};
+    const taskIDs = {{ task_ids|tojson }};
+    const csrfToken = "{{ csrf_token() }}";
 
-  const taskWorker = getWorkers(taskURL0, taskIDs);
+    const taskWorker = getWorkers(taskURL0, taskIDs, csrfToken);
 
   taskWorker.initTasks();
 </script>
@@ -168,6 +169,10 @@
       </button>
     </div>
   </div>
+{% endif %}
+{% endwith %}
+
+<div class="column" id="task_column">
 </div>
 
 <div class="box">
@@ -212,53 +217,6 @@
 {% endif %} {% endwith %}
 <div class="column" id="task_column"></div>
 
-<!--
-{% for task in task_list %}
-
-
-    <div class="card">
-        <header class="card-header">
-            <p class="card-header-title">
-                {{ task.title }}
-            </p>
-            <button class="card-header-icon" aria-label="more options">
-                <span class="icon">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-            </button>
-        </header>
-        <div class="card-content">
-            <div class="content">
-                {{ task.desc }}
-                <br>
-                {% for tag in task.tags %}
-                    <a href="#">#{{ tag.name }}</a>
-                {% endfor %}
-                <br>
-                {% for category in task.categories %}
-                    <a href="#">@{{ category.name }}</a>
-                {% endfor %}
-                <br>
-
-                Due by <time datetime="{{task.due_date}}">{{ task.due_date }}</time>
-            </div>
-        </div>
-        <footer class="card-footer">
-            <a href="#" class="card-footer-item">Save</a>
-            <a href="#" class="card-footer-item">Edit</a>
-            <a href="#" class="card-footer-item">Delete</a>
-        </footer>
-    </div> 
-    <br>
-
-
-    
-
-{% endfor %}
-
-<br>
-
--->
 
 <script>
   function filterTasks() {
