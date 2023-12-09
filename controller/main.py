@@ -26,11 +26,7 @@ def profile():
 @login_required
 def tasks():
     task_ids = [t.id for t in current_user.tasks]
-    task_roots = {t.id: TaskController.get_root(t).id for t in current_user.tasks}
-    return render_template('tasks.html', 
-            task_ids=task_ids,
-            task_roots=task_roots,
-            task_list=current_user.tasks)
+    return render_template('tasks.html', task_ids=task_ids, task_list=current_user.tasks)
 
 @main.route('/task/<int:task_id>', methods=["GET", "POST"])
 @login_required
