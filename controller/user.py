@@ -11,6 +11,9 @@ from typing import Optional
 from wtforms import Form, BooleanField, StringField, EmailField, PasswordField, validators
 
 from flask_wtf import FlaskForm
+from flask_login import current_user
+from flask import Blueprint, request, redirect, url_for
+from flask_login import login_required, current_user
 
 class LoginForm(FlaskForm):
     email = EmailField('Email Address')
@@ -99,3 +102,16 @@ class UserController:
         db.session.commit()
 
         return redirect(url_for('auth.login'))
+
+user = Blueprint('user', __name__)
+
+@user.route('/update_profile', methods=['POST'])
+@login_required
+def update_profile():
+    name = request.form.get('name')
+
+    current_user.name = name
+
+    db.session.commit()
+
+    return redirect(url_for('user.profile'))

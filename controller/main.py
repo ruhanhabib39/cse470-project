@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from controller.task import TaskForm, TaskController, TagController, CategoryController
 
-from model.task import Attachment
+from model.task import Attachment, Task
 
 import os
 
@@ -99,3 +99,6 @@ def task(task_id):
 
     return render_template('task.html', task=tsk, task_id=task_id, form=form)
 
+def index():
+    tasks = Task.query.all()  # Fetch all tasks from the database
+    return render_template('index.html', tasks=tasks)
