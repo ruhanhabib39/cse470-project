@@ -114,4 +114,4 @@ def update_profile():
 
     db.session.commit()
 
-    return redirect(url_for('user.profile'))
+    return redirect(url_for('main.profile'))
