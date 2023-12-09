@@ -1,4 +1,5 @@
 from project import db
+from datetime import datetime
 
 from typing import List, Set
 
@@ -48,6 +49,9 @@ class Task(db.Model):
 
     parent_id: Mapped[int] = mapped_column(ForeignKey("task.id"), nullable=True)
     children = relationship("Task")
+
+    completed = db.Column(db.Boolean, default=False)  
+    completion_date = db.Column(db.DateTime)  
 
 CATEGORY_MAX_LENGTH = 100
 

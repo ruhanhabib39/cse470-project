@@ -5,6 +5,7 @@ from model.user import User, EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH, NAME_MAX_LEN
 from model.task import Task, TASK_TITLE_MAX_LENGTH, TASK_DESC_MAX_LENGTH
 from model.task import Category, Tag, Attachment
 from project import db, ATTACHMENT_FOLDER
+from datetime import datetime
 
 from email_validator import validate_email, EmailNotValidError
 
@@ -205,3 +206,14 @@ class TaskController:
     def delete(task: Task):
         db.session.delete(task)
         db.session.commit()
+
+def complete_task(task_id):
+    task = Task.query.get(task_id)
+    task.completed = True
+    task.completion_date = datetime.now()
+    db.session.commit()
+    return redirect(url_for('main.tasks'))
+
+def task_history():
+    tasks = Task.query.filter_by(completed=True).order_by(Task.completion_date.desc()).all()
+    return render_template('task_history.html', tasks=tasks)
