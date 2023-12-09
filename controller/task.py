@@ -188,6 +188,9 @@ class TaskController:
 
     @staticmethod
     def mark_complete(task: Task):
+        if not task.completed:
+            task.completion_date = datetime.datetime.today()
+
         task.completed = True
         db.session.commit()
 
@@ -213,13 +216,20 @@ class TaskController:
         db.session.commit()
     
 
-def complete_task(task_id):
-    task = Task.query.get(task_id)
-    task.completed = True
-    task.completion_date = datetime.now()
-    db.session.commit()
-    return redirect(url_for('main.tasks'))
 
+
+#
+#def complete_task(task_id):
+#    task = Task.query.get(task_id)
+#    task.completed = True
+#    task.completion_date = datetime.now()
+#    db.session.commit()
+#    return redirect(url_for('main.tasks'))
+
+task = Blueprint('task', __name__)
+
+@task.route('/task_history')
+@login_required
 def task_history():
-    tasks = Task.query.filter_by(completed=True).order_by(Task.completion_date.desc()).all()
+    tasks = Task.query.filter_by(completed=True, user_id=current_user.id).order_by(Task.completion_date.desc()).all()
     return render_template('task_history.html', tasks=tasks)

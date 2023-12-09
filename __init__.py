@@ -35,14 +35,15 @@ def create_app():
 
     from controller.auth import auth as auth_blueprint
     from controller.main import main as main_blueprint
-    from controller.taskwork import taskwork as task_blueprint
     from controller.user import user as user_blueprint
+    from controller.task import task as task_blueprint
+    from controller.taskwork import taskwork as taskwork_blueprint
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
-    app.register_blueprint(task_blueprint)
     app.register_blueprint(user_blueprint)
-
+    app.register_blueprint(task_blueprint)
+    app.register_blueprint(taskwork_blueprint)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

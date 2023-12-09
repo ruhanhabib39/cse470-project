@@ -50,7 +50,7 @@ class Task(db.Model):
     parent_id: Mapped[int] = mapped_column(ForeignKey("task.id"), nullable=True)
     children = relationship("Task")
 
-    completed = db.Column(db.Boolean, default=False)  
+    # completed = db.Column(db.Boolean, default=False)  
     completion_date = db.Column(db.DateTime)  
     restored = db.Column(db.Boolean, default=False)
 
