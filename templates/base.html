@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Todo App!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
@@ -54,6 +55,12 @@
             </div>
         </div>
     </section>
+    <button id="dark-mode-toggle">Toggle Dark Mode</button>
+    <form method="POST" action="{{ url_for('taskwork.restore_task', task_id=task.id) }}">
+        <input type="submit" value="Restore">
+    </form>
+    <a href="{{ url_for('task.task_history') }}" class="button">View Task History</a>
+    <script src="{{ url_for('static', filename='darkmode.js') }}"></script>
 </body>
 
 </html>
