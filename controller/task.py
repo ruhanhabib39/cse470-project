@@ -207,6 +207,12 @@ class TaskController:
         db.session.delete(task)
         db.session.commit()
 
+    def restore(self, task: Task):
+        task.restored = True
+        task.archived = False
+        db.session.commit()
+    
+
 def complete_task(task_id):
     task = Task.query.get(task_id)
     task.completed = True

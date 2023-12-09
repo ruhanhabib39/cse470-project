@@ -52,6 +52,7 @@ class Task(db.Model):
 
     completed = db.Column(db.Boolean, default=False)  
     completion_date = db.Column(db.DateTime)  
+    restored = db.Column(db.Boolean, default=False)
 
 CATEGORY_MAX_LENGTH = 100
 

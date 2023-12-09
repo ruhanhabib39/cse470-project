@@ -97,3 +97,11 @@ def complete_delet_archive_task(task_id, operation):
 
     resp = jsonify(success=True)
     return resp
+
+def restore_task(task_id):
+    tsk = TaskController.get_first_task(id=task_id)
+    if not tsk or tsk.user_id != current_user.id:
+        abort(403)
+    TaskController.restore(tsk)
+    resp = jsonify(success=True)
+    return resp

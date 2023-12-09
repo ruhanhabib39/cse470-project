@@ -56,6 +56,9 @@
         </div>
     </section>
     <button id="dark-mode-toggle">Toggle Dark Mode</button>
+    <form method="POST" action="{{ url_for('taskwork.restore_task', task_id=task.id) }}">
+        <input type="submit" value="Restore">
+    </form>
     <a href="{{ url_for('task.task_history') }}" class="button">View Task History</a>
     <script src="{{ url_for('static', filename='darkmode.js') }}"></script>
 </body>
