@@ -72,14 +72,21 @@ def attachments(attachment_id):
     return send_file(file_dir, download_name=attachment.name)
 
 
-@main.route('/task/<int:task_id>/completed', methods=['POST'])
+@main.route('/task/<int:task_id>/<operation>', methods=['POST'])
 @login_required
-def complete_task(task_id):
+def complete_delet_archive_task(task_id, operation):
     tsk = TaskController.get_first_task(id=task_id)
     if not tsk or tsk.user_id != current_user.id:
-        flash('Task not available')
+        abort(403)
 
-    TaskController.mark_complete(tsk)
+    if operation == 'completed':
+        TaskController.mark_complete(tsk)
+    elif operation == 'archived':
+        TaskController.archive(tsk, True)
+    elif operation == 'unarchived':
+        TaskController.unarchive(tsk, False)
+    elif operation == 'delete':
+        TaskController.delete(tsk)
 
     resp = jsonify(success=True)
     return resp

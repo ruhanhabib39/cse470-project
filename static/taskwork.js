@@ -19,6 +19,19 @@ const getWorkers = (taskURL0, taskIDs_, csrfToken) => {
             completeButton.addEventListener("click", () => completeTask(taskID));
         }
 
+        let archiveButton = taskDiv.querySelector('.archive-button');
+        if (archiveButton !== null && archiveButton !== undefined) {
+            archiveButton.addEventListener("click", () => archiveTask(taskID, "1"));
+        }
+
+        let unarchiveButton = taskDiv.querySelector('.unarchive-button');
+        if (unarchiveButton !== null && unarchiveButton !== undefined) {
+            unarchiveButton.addEventListener("click", () => archiveTask(taskID, "0"));
+        }
+
+        let deleteButton = taskDiv.querySelector('.delete-button');
+        deleteButton.addEventListener("click", () => deleteTask(taskID));
+
         // listener for file input
         let fileInput = taskDiv.querySelector('.file-input');
         let fileName = taskDiv.querySelector('.file-name')
@@ -82,7 +95,6 @@ const getWorkers = (taskURL0, taskIDs_, csrfToken) => {
     };
 
     const updateTask = (taskID) => {
-        // console.log(`update task called for ${taskID}`);
         const taskDiv = getTaskDiv(taskID);
         const taskLink = getTaskLink(taskID);
         const form = document.getElementById(`form${taskID}`);
@@ -97,13 +109,28 @@ const getWorkers = (taskURL0, taskIDs_, csrfToken) => {
     };
 
     const completeTask = (taskID) => {
-        const taskDiv = getTaskDiv(taskID);
         const taskLink = getTaskLink(taskID) + "/completed";
-        const form = taskDiv.querySelector('.update-form');
-        const data = new Formdata(form);
 
-        fetch(taskLink, { method: 'POST', body: data })
+        fetch(taskLink, { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
             .then(response => refreshTasks(taskID));
+    };
+
+    const archiveTask = (taskID, value) => {
+        const action = value === "1" ? "/archived" : "/unarchived";
+        const taskLink = getTaskLink(taskID) + action;
+
+
+        fetch(taskLink, { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(response => refreshTasks(taskID));
+    };
+
+    const deleteTask = (taskID) => {
+        const taskLink = getTaskLink(taskID) + "/delete";
+
+        fetch(taskLink, { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(response => {
+                location.reload();
+            });
     };
 
     const exported = {

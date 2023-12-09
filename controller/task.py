@@ -190,5 +190,18 @@ class TaskController:
         task.completed = True
         db.session.commit()
 
-        for children in task.children:
-            TaskController.mark_complete(children)
+        for child in task.children:
+            TaskController.mark_complete(child)
+
+    @staticmethod
+    def archive(task: Task, value: bool):
+        task.archived = value
+        db.session.commit()
+
+        for child in task.children:
+            TaskController.archive(child, value)
+
+    @staticmethod
+    def delete(task: Task):
+        db.session.delete(task)
+        db.session.commit()

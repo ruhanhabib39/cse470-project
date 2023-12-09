@@ -9,17 +9,25 @@
                 Done!
             </button>
         {% else %}
-            <form method="POST" class="complete-form" action="/task/{{ task_id }}/completed">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button class="button is-success complete-button" type="submit">
-                    Mark complete
-                </button>
-            </form>
+            <button class="button is-success complete-button">
+                Mark complete
+            </button>
         {% endif %}
-        <button class="button is-warning">
-            Archive
-        </button>
-        <button class="button is-danger">
+
+        {% if task.archived %}
+
+            <button class="button is-warning unarchive-button">
+                Unarchive
+            </button>
+
+        {% else %}
+
+            <button class="button is-warning archive-button">
+                Archive
+            </button>
+        {% endif %}
+
+        <button class="button is-danger delete-button">
             Delete
         </button>
     </div>

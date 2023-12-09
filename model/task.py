@@ -19,6 +19,15 @@ tag_association_table = Table("tag_association_table",
     Column("task_id", ForeignKey("task.id"), primary_key=True),
     Column("tag_id", ForeignKey("tag.id"), primary_key=True))
 
+# task.title
+# task.priority
+# task.due_date
+# task.completed
+# task.attachments
+
+# task.user
+
+# task.children
 
 class Task(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
