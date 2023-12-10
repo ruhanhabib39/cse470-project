@@ -31,3 +31,11 @@
     text-decoration: none;  /* Remove underline when active */
     font-weight: bold;      /* Add bold when active */
 }
+
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    font-size: 25px;
+}
