@@ -1,17 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
+<style>
+    .task-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .task-card {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 10px;
+        width: 300px;
+    }
+
+    .insights {
+        border: 1px solid black;
+        padding: 15px;
+        margin: 10px;
+        width: 300px;
+    }
+
+    .task-list {
+        display: inline-block;
+        padding: 15px;
+        margin: 10px;
+        width: 300px;
+    }
+
+    .task-list ol {
+        padding-left: 20px;
+    }
+</style>
+
+<h1 class="title" style="color: blue; font-size: 24px; text-align: center;">
     Todo App!
 </h1>
-<h2 class="subtitle">
+<h2 class="subtitle" style="color: green; text-align: center;">
     Hello!
 </h2>
-
-{% for task in tasks %}
-    <div>
-        <h3>{{ task.title }}</h3>
-        <p>{{ task.description }}</p>
+<div class="task-container">
+    <div class="task-list">
+        <h3>Task List:</h3>
+        <ol>
+            {% for task in tasks %}
+                <li>{{ task.title }}</li>
+            {% endfor %}
+        </ol>
     </div>
-{% endfor %}
+</div>
+
+{% if insights %}
+<div class="insights" style="text-align: center;">
+    <h1>Task Insights: </h1>
+    <p>Total tasks: {{ insights.total_tasks }}</p>
+    <p>Total completed tasks: {{ insights.total_completed_tasks }}</p>
+    <p>Completion rate: {{ insights.completion_rate * 100 }}%</p>
+</div>
+{% endif %}
 {% endblock %}

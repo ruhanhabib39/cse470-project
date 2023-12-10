@@ -59,9 +59,11 @@ def task(task_id):
 @main.route('/')
 def index():
     tasks = []
+    insights = None  # Define insights here
     if current_user.is_authenticated:
+        insights = TaskController.get_task_insights(current_user.id)
         tasks = current_user.tasks  # Fetch all tasks from the database
-    return render_template('index.html', tasks=tasks)
+    return render_template('index.html', tasks=tasks, insights=insights)
 
 
 @main.route('/attachments/<int:attachment_id>')
