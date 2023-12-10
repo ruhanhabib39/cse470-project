@@ -16,3 +16,18 @@ body.dark-mode {
 .navbar-item {
     color: #ffffff;
 }
+
+.dark-mode-toggle {
+    cursor: pointer;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+}
+
+.dark-mode-toggle.active {
+    text-decoration: none;  /* Remove underline when active */
+    font-weight: bold;      /* Add bold when active */
+}
