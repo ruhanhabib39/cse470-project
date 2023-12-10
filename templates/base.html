@@ -23,32 +23,37 @@
                   Home
                 </a>
                 {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('main.profile') }}" class="navbar-item">
-                      Profile
-                    </a>
-                    <a href="{{ url_for('main.tasks') }}" class="navbar-item">
-                      Tasks
-                    </a>
-                    <a
-                      href="{{ url_for('task.task_history') }}"
-                      class="navbar-item"
-                    >
-                      View Task History
-                    </a>
-                {% endif %}
-                {% if not current_user.is_authenticated %}
-                    <a href="{{ url_for('auth.login') }}" class="navbar-item">
-                      Login
-                    </a>
-                    <a href="{{ url_for('auth.signup') }}" class="navbar-item">
-                      Sign Up
-                    </a>
-                {% endif %}
+                <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                  Profile
+                </a>
+                <a href="{{ url_for('main.tasks') }}" class="navbar-item">
+                  Tasks
+                </a>
+                <a
+                  href="{{ url_for('task.task_history') }}"
+                  class="navbar-item"
+                >
+                  View Task History
+                </a>
 
-                {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('auth.logout') }}" class="navbar-item">
-                      Logout
-                    </a>
+                {% endif %} {% if current_user.is_authenticated %}
+                <a
+                  href="{{ url_for('task.task_insights') }}"
+                  class="navbar-item"
+                >
+                  Task Insights
+                </a>
+                {% endif %} {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.login') }}" class="navbar-item">
+                  Login
+                </a>
+                <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                  Sign Up
+                </a>
+                {% endif %} {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                  Logout
+                </a>
                 <!-- Other navbar items... -->
                 {% endif %}
                 <a
@@ -62,7 +67,7 @@
                 <a href="{{ url_for('task.export_data') }}" class="navbar-item">
                   Export Data
                 </a>
-                {% endif %} 
+                {% endif %}
               </div>
             </div>
           </div>
