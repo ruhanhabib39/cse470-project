@@ -54,6 +54,18 @@ class Task(db.Model):
     completion_date = db.Column(db.DateTime)  
     restored = db.Column(db.Boolean, default=False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'desc': self.desc,
+            'priority': self.priority,
+            'due_date': self.due_date.isoformat() if self.due_date else None,
+            'user_id': self.user_id,
+            'tags': [tag.name for tag in self.tags],
+            'categories': [category.name for category in self.categories]
+        }
+
 CATEGORY_MAX_LENGTH = 100
 
 class Category(db.Model):

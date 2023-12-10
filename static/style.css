@@ -1,4 +1,33 @@
-body.dark-mode {
-    background-color: #333;
-    color: #fff;
+
+.dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.hero.is-primary {
+/*    background-color: #363636;
+    color: #ffffff;  */
+}
+
+.navbar {
+    background-color: #1f1f1f;
+}
+
+.navbar-item {
+    color: #ffffff;
+}
+
+.dark-mode-toggle {
+    cursor: pointer;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+}
+
+.dark-mode-toggle.active {
+    text-decoration: none;  /* Remove underline when active */
+    font-weight: bold;      /* Add bold when active */
 }
