@@ -1,4 +1,18 @@
+
 body.dark-mode {
-    background-color: #333;
-    color: #fff;
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.hero.is-primary {
+    background-color: #363636;
+    color: #ffffff;
+}
+
+.navbar {
+    background-color: #1f1f1f;
+}
+
+.navbar-item {
+    color: #ffffff;
 }
