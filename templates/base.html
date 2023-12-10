@@ -29,6 +29,9 @@
                             <a href="{{ url_for('main.tasks') }}" class="navbar-item">
                                 Tasks
                             </a>
+                            <a href="{{ url_for('task.task_history') }}" class="navbar-item">
+                                View Task History
+                            </a>
                             {% endif %}
                             {% if not current_user.is_authenticated %}
                             <a href="{{ url_for('auth.login') }}" class="navbar-item">
@@ -59,7 +62,6 @@
         <button id="dark-mode-toggle">Toggle Dark Mode</button>
 
     </section>
-    <a href="{{ url_for('task.task_history') }}" class="button">View Task History</a>
     <script src="{{ url_for('static', filename='darkmode.js') }}"></script>
 </body>
 
