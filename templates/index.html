@@ -7,11 +7,19 @@
 <h2 class="subtitle">
     Hello!
 </h2>
-
+<h1>Tasks: </h1>
 {% for task in tasks %}
     <div>
         <h3>{{ task.title }}</h3>
         <p>{{ task.description }}</p>
     </div>
 {% endfor %}
+
+{% if insights %}
+
+<h1>Task Insights: </h1>
+<p>Total tasks: {{ insights.total_tasks }}</p>
+<p>Total completed tasks: {{ insights.total_completed_tasks }}</p>
+<p>Completion rate: {{ insights.completion_rate * 100 }}%</p>
+{% endif %}
 {% endblock %}
