@@ -6,6 +6,7 @@ from model.task import Task, TASK_TITLE_MAX_LENGTH, TASK_DESC_MAX_LENGTH
 from model.task import Category, Tag, Attachment
 from project import db, ATTACHMENT_FOLDER
 from datetime import datetime
+from flask import jsonify
 
 from email_validator import validate_email, EmailNotValidError
 
@@ -233,3 +234,10 @@ task = Blueprint('task', __name__)
 def task_history():
     tasks = Task.query.filter_by(completed=True, user_id=current_user.id).order_by(Task.completion_date.desc()).all()
     return render_template('task_history.html', tasks=tasks)
+
+@task.route('/export_data', methods=['GET'])
+@login_required
+def export_data():
+    tasks = TaskController.get_tasks(user_id=current_user.id)
+    task_dicts = [task.to_dict() for task in tasks]
+    return jsonify(task_dicts)
