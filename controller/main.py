@@ -62,7 +62,7 @@ def index():
     insights = None  # Define insights here
     if current_user.is_authenticated:
         insights = TaskController.get_task_insights(current_user.id)
-        tasks = current_user.tasks  # Fetch all tasks from the database
+        tasks = [t for t in current_user.tasks if not t.completed]  # Fetch all tasks from the database
     return render_template('index.html', tasks=tasks, insights=insights)
 
 
