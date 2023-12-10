@@ -216,6 +216,25 @@ class TaskController:
         task.archived = False
         db.session.commit()
     
+    # Calculates task insights for a given user
+    # Parameters:
+    #   - user_id: int - the ID of the user
+    # Returns:
+    #   - dict - a dictionary containing task insights
+    
+    def get_task_insights(user_id: int) -> dict:
+        tasks = Task.query.filter_by(user_id=user_id).all()
+        completed_tasks = [task for task in tasks if task.completed]
+        total_tasks = len(tasks)
+        total_completed_tasks = len(completed_tasks)
+        completion_rate = total_completed_tasks / total_tasks if total_tasks > 0 else 0
+
+        return {
+            'total_tasks': total_tasks,
+            'total_completed_tasks': total_completed_tasks,
+            'completion_rate': completion_rate,
+        }
+    
 
 
 
@@ -241,3 +260,12 @@ def export_data():
     tasks = TaskController.get_tasks(user_id=current_user.id)
     task_dicts = [task.to_dict() for task in tasks]
     return jsonify(task_dicts)
+
+# Route for displaying task insights
+@task.route('/task_insights')
+@login_required
+def task_insights():
+    # Get task insights for the current user
+    insights = TaskController.get_task_insights(current_user.id)
+    # Render the task insights template with the insights data
+    return render_template('task_insights.html', insights=insights)
